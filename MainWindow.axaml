@@ -1,0 +1,159 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="using:ACNHPockets"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1600" d:DesignHeight="1000"
+        RequestedThemeVariant="Default"
+        x:Class="ACNHPockets.MainWindow"
+        Title="ACNHPockets">
+
+<ScrollViewer AllowAutoHide="False">
+  <StackPanel Margin="20" Spacing="10">
+        <DockPanel>
+        <TextBlock Text="Switch IP: " />
+        <TextBox x:Name="ipaddress" Text="Enter IP address" Width="150" HorizontalAlignment="Left" />
+        </DockPanel>
+
+        <DockPanel>
+        <Button Name="ConnectButton" Content="Connect" Width="100" Click="ConnectButton_Click"/>        
+        <Button Margin="60 10 10 10" Name="DisconnectButton" Content="Disconnect" Width="100" Click="disconnectButton_Click"/>
+        </DockPanel> 
+
+        <TextBlock Margin="0 0" x:Name="status">Status...</TextBlock>
+
+
+
+<!--
+
+    <StackPanel Spacing="10" Margin="20" HorizontalAlignment="Right">
+        
+  <TextBlock Margin="0 5">Choose an item:</TextBlock>
+  <AutoCompleteBox x:Name="ACNHItems" 
+                 Width="200"
+                 SelectionChanged="SelectionChanged"
+                 IsTextCompletionEnabled="True"
+                 MinimumPrefixLength="0" 
+                 FilterMode="Contains" />
+ </StackPanel>  
+
+<StackPanel Name="ItemImage" Spacing="10" Margin="20" HorizontalAlignment="Right">
+  <Button x:Name="Image" Content="Image" Height="150" Width="150" Click="SetSlot"/>
+</StackPanel>
+
+-->
+
+        <DockPanel>
+                <Button Margin="300 0 0 5" 
+                Content="Select a NHI File" 
+                Click="OpenNHIFile_Click" 
+                HorizontalAlignment="Left"
+                Padding="10,5"/>    
+
+                <Button Margin="50 0 0 5" 
+                Content="Save a NHI File" 
+                Click="SaveNHIFile_Click" 
+                HorizontalAlignment="Left"
+                Padding="10,5"/> 
+
+                <Button Margin="50 0 0 5" 
+                Content="Spawn a Item to all slots" 
+                Click="Spawnall_Click" 
+                HorizontalAlignment="Left"
+                Padding="10,5"/> 
+
+        <TextBlock Margin="300 0 0 5" HorizontalAlignment="Right">Choose an item:</TextBlock>
+        <AutoCompleteBox x:Name="ACNHItems" 
+                 Margin="30 0 0 5"
+                 Width="200"
+                 SelectionChanged="SelectionChanged"
+                 IsTextCompletionEnabled="True"
+                 MinimumPrefixLength="0"
+                 HorizontalAlignment="Right"
+                 FilterMode="Contains" />
+        
+    <StackPanel HorizontalAlignment="Center">
+        <TextBlock Margin="30 0 0 5" HorizontalAlignment="Left" Text="Count:" />
+        <TextBox Margin="30 0 0 5" x:Name="count" Text="1" Width="100" Height="3" HorizontalAlignment="Right" />
+    </StackPanel>
+
+<StackPanel Name="ItemImage" HorizontalAlignment="Center">
+  <Button x:Name="Image" Content="Image" Height="150" Width="150" />
+</StackPanel>
+
+
+
+        </DockPanel>
+
+
+    <StackPanel x:Name="InventoryPanel">
+        <DockPanel HorizontalAlignment="Right">
+        <local:InventorySlot x:Name="Slot1" Content="Slot 1" Height="150" Width="150" Click="SetSlot1" />
+        <local:InventorySlot x:Name="Slot2" Content="Slot 2" Height="150" Width="150" Click="SetSlot2" />
+        <local:InventorySlot x:Name="Slot3" Content="Slot 3" Height="150" Width="150" Click="SetSlot3" />
+        <local:InventorySlot x:Name="Slot4" Content="Slot 4" Height="150" Width="150" Click="SetSlot4" />
+        <local:InventorySlot x:Name="Slot5" Content="Slot 5" Height="150" Width="150" Click="SetSlot5" />
+        <local:InventorySlot x:Name="Slot6" Content="Slot 6" Height="150" Width="150" Click="SetSlot6" />
+        <local:InventorySlot x:Name="Slot7" Content="Slot 7" Height="150" Width="150" Click="SetSlot7" />
+        <local:InventorySlot x:Name="Slot8" Content="Slot 8" Height="150" Width="150" Click="SetSlot8" />
+        <local:InventorySlot x:Name="Slot9" Content="Slot 9" Height="150" Width="150" Click="SetSlot9" />
+        <local:InventorySlot x:Name="Slot10" Content="Slot 10" Height="150" Width="150" Click="SetSlot10" />
+        </DockPanel>
+            
+        <DockPanel HorizontalAlignment="Right">
+        <local:InventorySlot x:Name="Slot11" Content="Slot 11" Height="150" Width="150" Click="SetSlot11" />
+        <local:InventorySlot x:Name="Slot12" Content="Slot 12" Height="150" Width="150" Click="SetSlot12" />
+        <local:InventorySlot x:Name="Slot13" Content="Slot 13" Height="150" Width="150" Click="SetSlot13" />
+        <local:InventorySlot x:Name="Slot14" Content="Slot 14" Height="150" Width="150" Click="SetSlot14" />
+        <local:InventorySlot x:Name="Slot15" Content="Slot 15" Height="150" Width="150" Click="SetSlot15" />
+        <local:InventorySlot x:Name="Slot16" Content="Slot 16" Height="150" Width="150" Click="SetSlot16" />
+        <local:InventorySlot x:Name="Slot17" Content="Slot 17" Height="150" Width="150" Click="SetSlot17" />
+        <local:InventorySlot x:Name="Slot18" Content="Slot 18" Height="150" Width="150" Click="SetSlot18" />
+        <local:InventorySlot x:Name="Slot19" Content="Slot 19" Height="150" Width="150" Click="SetSlot19" />
+        <local:InventorySlot x:Name="Slot20" Content="Slot 20" Height="150" Width="150" Click="SetSlot20" />
+        </DockPanel>
+
+        <DockPanel HorizontalAlignment="Right">
+        <local:InventorySlot x:Name="Slot21" Content="Slot 21" Height="150" Width="150" Click="SetSlot21" />
+        <local:InventorySlot x:Name="Slot22" Content="Slot 22" Height="150" Width="150" Click="SetSlot22" />
+        <local:InventorySlot x:Name="Slot23" Content="Slot 23" Height="150" Width="150" Click="SetSlot23" />
+        <local:InventorySlot x:Name="Slot24" Content="Slot 24" Height="150" Width="150" Click="SetSlot24" />
+        <local:InventorySlot x:Name="Slot25" Content="Slot 25" Height="150" Width="150" Click="SetSlot25" />
+        <local:InventorySlot x:Name="Slot26" Content="Slot 26" Height="150" Width="150" Click="SetSlot26" />
+        <local:InventorySlot x:Name="Slot27" Content="Slot 27" Height="150" Width="150" Click="SetSlot27" />
+        <local:InventorySlot x:Name="Slot28" Content="Slot 28" Height="150" Width="150" Click="SetSlot28" />
+        <local:InventorySlot x:Name="Slot29" Content="Slot 29" Height="150" Width="150" Click="SetSlot29" />
+        <local:InventorySlot x:Name="Slot30" Content="Slot 30" Height="150" Width="150" Click="SetSlot30" />
+        </DockPanel>
+
+        <DockPanel HorizontalAlignment="Right">
+        <local:InventorySlot x:Name="Slot31" Content="Slot 31" Height="150" Width="150" Click="SetSlot31" />
+        <local:InventorySlot x:Name="Slot32" Content="Slot 32" Height="150" Width="150" Click="SetSlot32" />
+        <local:InventorySlot x:Name="Slot33" Content="Slot 33" Height="150" Width="150" Click="SetSlot33" />
+        <local:InventorySlot x:Name="Slot34" Content="Slot 34" Height="150" Width="150" Click="SetSlot34" />
+        <local:InventorySlot x:Name="Slot35" Content="Slot 35" Height="150" Width="150" Click="SetSlot35" />
+        <local:InventorySlot x:Name="Slot36" Content="Slot 36" Height="150" Width="150" Click="SetSlot36" />
+        <local:InventorySlot x:Name="Slot37" Content="Slot 37" Height="150" Width="150" Click="SetSlot37" />
+        <local:InventorySlot x:Name="Slot38" Content="Slot 38" Height="150" Width="150" Click="SetSlot38" />
+        <local:InventorySlot x:Name="Slot39" Content="Slot 39" Height="150" Width="150" Click="SetSlot39" />
+        <local:InventorySlot x:Name="Slot40" Content="Slot 40" Height="150" Width="150" Click="SetSlot40" />
+        </DockPanel> 
+        </StackPanel>
+
+
+        <TextBlock Text="Chat:" />
+        <TextBox x:Name="chattext" Text="Chat Message" Width="300" HorizontalAlignment="Left" />
+        <DockPanel>
+        <Button Name="startchat" Content="Start Chat" Width="90" Click="startChat_Click"/>
+        <Button Margin="60 10 10 10" Name="chatbutton" Content="Send Chat" Width="100" Click="chatButton_Click"/>
+        </DockPanel>
+        <TextBlock Text="Inventory Freeze" />
+        <ToggleButton Name="invFreezeToggle"
+              Content="Inv Freeze On/Off"
+              Click="InvFreezeButton_Click" />
+
+    
+    </StackPanel>
+
+</ScrollViewer>
+</Window>
