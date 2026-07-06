@@ -38,7 +38,7 @@ namespace ACNHPockets
         private static readonly string SettingsPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "ACNHPockets",
-            "ACNHPockets-settings.json");
+            "acnhpockets-settings.json");
 
         public AppSettings Load()
         {
