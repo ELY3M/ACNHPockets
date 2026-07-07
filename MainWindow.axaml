@@ -70,7 +70,7 @@
     </StackPanel>
 
 <StackPanel Name="ItemImage" HorizontalAlignment="Center">
-  <Button x:Name="Image" Content="Image" Height="150" Width="150" />
+  <Button x:Name="Image" Content="Image" Height="150" Width="150" Click="ItemAdd" />
 </StackPanel>
 
 

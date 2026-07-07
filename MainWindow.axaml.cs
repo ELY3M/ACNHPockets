@@ -251,8 +251,19 @@ namespace ACNHPockets
         
          */
 
+        public void ItemAdd(object sender, RoutedEventArgs args)
+        {
 
-      
+            if (count.Text == string.Empty)
+            {
+                count.Text = "1";
+            }
+            ///LoadImages(Image, Utilities.GetImagePathFromID(Utilities.GetIDFromName(ACNHItems.Text), itemSource), ACNHItems.Text, count.Text);
+            status.Text = "Item added to slot!";
+
+        }
+
+
 
 
 
@@ -1472,46 +1483,174 @@ string[] newArray = dynamicList.ToArray();
         }
 
 
-        private async void Spawnall_Click(object sender, RoutedEventArgs args)
-        {
 
 
-            string bank = "";
-            string inventorydata = "";
-            foreach (InventorySlot b in invbuttons)
-            {
+        /*
 
-                if (count.Text == string.Empty)
+                private async void Spawnall_Click(object sender, RoutedEventArgs args)
                 {
-                    count.Text = "1";
-                }
-                LoadImages(b, Utilities.GetImagePathFromID(Utilities.GetIDFromName(ACNHItems.Text), itemSource), ACNHItems.Text, count.Text);
-                Utilities.LogEvent("MainWindow", "Item Spawned: " + ACNHItems.Text + " Count: " + count.Text);
-                Utilities.LogEvent("MainWindow", "Item ID: " + Utilities.GetIDFromName(ACNHItems.Text) + " Count (Hex): " + Utilities.ConvertItemCountToHex(count.Text));
-                SlotItem.Add(Utilities.GetIDFromName(ACNHItems.Text));
-                SlotCount.Add(Utilities.ConvertItemCountToHex(count.Text));
-                //Utilities.Flip(Utilities.PrecedingZeros(Utilities.GetIDFromName(ACNHItems.Text), 4));
-                //inventorydata += Utilities.Flip(Utilities.PrecedingZeros(Utilities.GetIDFromName(ACNHItems.Text), 8)) + Utilities.ConvertItemCountToHex(count.Text) + "000000";
-                //inventorydata += Utilities.Flip(Utilities.PrecedingZeros(SlotCount[SlotItem.IndexOf(ACNHItems.Text)], 8)) + Utilities.Flip(Utilities.PrecedingZeros(count.Text, 4)) + "00000000";
 
+
+                    string bank = "";
+                    string inventorydata = "";
+                    foreach (InventorySlot b in invbuttons)
+                    {
+
+                        if (count.Text == string.Empty)
+                        {
+                            count.Text = "1";
+                        }
+                        LoadImages(b, Utilities.GetImagePathFromID(Utilities.GetIDFromName(ACNHItems.Text), itemSource), ACNHItems.Text, count.Text);
+                        Utilities.LogEvent("MainWindow", "Item Spawned: " + ACNHItems.Text + " Count: " + count.Text);
+                        Utilities.LogEvent("MainWindow", "Item ID: " + Utilities.GetIDFromName(ACNHItems.Text) + " Count (Hex): " + Utilities.ConvertItemCountToHex(count.Text));
+                        SlotItem.Add(Utilities.GetIDFromName(ACNHItems.Text));
+                        SlotCount.Add(Utilities.ConvertItemCountToHex(count.Text));
+                        //Utilities.Flip(Utilities.PrecedingZeros(Utilities.GetIDFromName(ACNHItems.Text), 4));
+                        //inventorydata += Utilities.Flip(Utilities.PrecedingZeros(Utilities.GetIDFromName(ACNHItems.Text), 8)) + Utilities.ConvertItemCountToHex(count.Text) + "000000";
+                        //inventorydata += Utilities.Flip(Utilities.PrecedingZeros(SlotCount[SlotItem.IndexOf(ACNHItems.Text)], 8)) + Utilities.Flip(Utilities.PrecedingZeros(count.Text, 4)) + "00000000";
+
+                    }
+
+
+
+
+
+
+                    //Utilities.LogEvent("MainWindow", "inventorydata: " + inventorydata);
+                    //appSettings.Inventorydata = inventorydata;
+                    //settingsService.Save(appSettings);
+
+
+
+                }
+
+        */
+
+
+        public void Spawnall_Click(object sender, RoutedEventArgs args)
+        {
+            if (ACNHItems.Text == "")
+            {
+                ///MessageBox.Show(@"Please enter an ID before sending item");
+                return;
             }
 
+            if (count.Text == "")
+            {
+                ///MessageBox.Show(@"Please enter an amount");
+                return;
+            }
+
+            string itemID = Utilities.GetIDFromName(ACNHItems.Text);
+
+            //if (HexModeButton.Tag.ToString() == "Normal")
+            //{
+                int decValue = Convert.ToInt32(count.Text) - 1;
+                string itemAmount;
+                if (decValue < 0)
+                    itemAmount = "0";
+                else
+                    itemAmount = decValue.ToString("X");
+                //Thread spawnAllThread = new(delegate () { SpawnAll(itemID, itemAmount); });
+                //spawnAllThread.Start();
+                SpawnAll(itemID, itemAmount);
+            /*
+            }
+            else
+            {
+                string itemAmount = count.Text;
+                Thread spawnAllThread = new(delegate () { SpawnAll(itemID, itemAmount); });
+                spawnAllThread.Start();
+            }
+            */
+            //this.ShowMessage(IDTextbox.Text);
+        }
+
+        private void SpawnAll(string itemId, string itemAmount)
+        {
+
+            if (online)
+            {
+                byte[] b = new byte[160];
+                byte[] id = Utilities.StringToByte(Utilities.Flip(Utilities.PrecedingZeros(itemId, 8)));
+                byte[] data = Utilities.StringToByte(Utilities.Flip(Utilities.PrecedingZeros(itemAmount, 8)));
 
 
+                for (int i = 0; i < b.Length; i += 8)
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        b[i + j] = id[j];
+                        b[i + j + 4] = data[j];
+                    }
+                }
 
+                try
+                {
+                    Utilities.OverwriteAll(socket, b, b, ref counter);
+                }
+                catch (Exception ex)
+                {
+                    Utilities.LogEvent("MainForm", "Multithreading badness. This will cause a crash later: " + ex.Message);
+                }
 
+                foreach (InventorySlot btn in invbuttons)
+                {
+                        if (Utilities.Turn2bytes(itemId) == "16A2") //Recipe
+                        {
+                            //btn.Setup(Utilities.GetNameFromID(Utilities.Turn2bytes(itemAmount), recipeSource), 0x16A2, Convert.ToUInt32("0x" + itemAmount, 16), Utilities.GetImagePathFromID(Utilities.Turn2bytes(itemAmount), recipeSource), "", SelectedItem.GetFlag0(), SelectedItem.GetFlag1());
+                            LoadImages(btn, Utilities.GetImagePathFromID(Utilities.Turn2bytes(itemAmount), recipeSource), Utilities.GetNameFromID(Utilities.Turn2bytes(itemAmount), recipeSource), "DIY");
+                        }
+                        else
+                        {
+                            //btn.Setup(Utilities.GetNameFromID(Utilities.Turn2bytes(itemId), itemSource), Convert.ToUInt16("0x" + Utilities.Turn2bytes(itemId), 16), Convert.ToUInt32("0x" + itemAmount, 16), Utilities.GetImagePathFromID(Utilities.Turn2bytes(itemId), itemSource, Convert.ToUInt32("0x" + itemAmount, 16)), "", SelectedItem.GetFlag0(), SelectedItem.GetFlag1());
+                            LoadImages(btn, Utilities.GetImagePathFromID(Utilities.Turn2bytes(itemId), itemSource, Convert.ToUInt32("0x" + itemAmount, 16)), Utilities.GetNameFromID(Utilities.Turn2bytes(itemId), itemSource), (Convert.ToUInt32("0x" + itemAmount, 16) + 1).ToString());
+                        }
+                }
 
-            //Utilities.LogEvent("MainWindow", "inventorydata: " + inventorydata);
-            //appSettings.Inventorydata = inventorydata;
-            //settingsService.Save(appSettings);
+                Thread.Sleep(1000);
+            }
+            //offline
+            else
+            {
+                foreach (InventorySlot btn in invbuttons)
+                {
 
-
+                        if (Utilities.Turn2bytes(itemId) == "16A2") //Recipe
+                        {
+                            //btn.Setup(Utilities.GetNameFromID(Utilities.Turn2bytes(itemAmount), recipeSource), 0x16A2, Convert.ToUInt32("0x" + itemAmount, 16), Utilities.GetImagePathFromID(Utilities.Turn2bytes(itemAmount), recipeSource), "", SelectedItem.GetFlag0(), SelectedItem.GetFlag1());
+                            LoadImages(btn, Utilities.GetImagePathFromID(Utilities.Turn2bytes(itemAmount), recipeSource), Utilities.GetNameFromID(Utilities.Turn2bytes(itemAmount), recipeSource), "DIY");
+                    }
+                        else
+                        {
+                            //btn.Setup(Utilities.GetNameFromID(Utilities.Turn2bytes(itemId), itemSource), Convert.ToUInt16("0x" + Utilities.Turn2bytes(itemId), 16), Convert.ToUInt32("0x" + itemAmount, 16), GetImagePathFromID(Utilities.Turn2bytes(itemId), itemSource, Convert.ToUInt32("0x" + itemAmount, 16)), "", SelectedItem.GetFlag0(), SelectedItem.GetFlag1());
+                            LoadImages(btn, Utilities.GetImagePathFromID(Utilities.Turn2bytes(itemId), itemSource, Convert.ToUInt32("0x" + itemAmount, 16)), Utilities.GetNameFromID(Utilities.Turn2bytes(itemId), itemSource), (Convert.ToUInt32("0x" + itemAmount, 16) + 1).ToString());
+                        }
+                }
+            }
 
         }
 
 
 
-            void UpdateInventory()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        void UpdateInventory()
         {
             //AllowInventoryUpdate = false;
             status.Text = "Reading Inventory...";
