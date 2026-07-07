@@ -62,7 +62,13 @@
                 HorizontalAlignment="Left"
                 Padding="10,5"/> 
 
-        <TextBlock Margin="300 0 0 5" HorizontalAlignment="Right">Choose an item:</TextBlock>
+                <Button Margin="50 0 0 5" 
+                Content="Clear Inventory" 
+                Click="ClearInventory_Click" 
+                HorizontalAlignment="Left"
+                Padding="10,5"/> 
+
+        <TextBlock Margin="200 0 0 5" HorizontalAlignment="Right">Choose an item:</TextBlock>
         <AutoCompleteBox x:Name="ACNHItems" 
                  Margin="30 0 0 5"
                  Width="200"

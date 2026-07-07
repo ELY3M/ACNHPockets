@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -1690,6 +1691,65 @@ string[] newArray = dynamicList.ToArray();
             //AllowInventoryUpdate = true;
         }
 
+        private async void ClearInventory_Click(object sender, RoutedEventArgs args)
+        {
+            Utilities.LogEvent("MainWindow", "Clearing Inventory...");
+            ClearInventory();
+        }
+
+
+        private void ClearInventory()
+        {
+
+            try
+            {
+                //online
+                if (online)
+                {
+                    byte[] b = new byte[160];
+
+                    //Debug.Print(Utilities.precedingZeros(itemID, 8));
+                    //Debug.Print(Utilities.precedingZeros(itemAmount, 8));
+
+                    for (int i = 0; i < b.Length; i += 8)
+                    {
+                        b[i] = 0xFE;
+                        b[i + 1] = 0xFF;
+                        for (int j = 0; j < 6; j++)
+                        {
+                            b[i + 2 + j] = 0x00;
+                        }
+                    }
+
+                    Utilities.OverwriteAll(socket, b, b, ref counter);
+                    //string result = Encoding.ASCII.GetString(Utilities.transform(b));
+                    //Debug.Print(result);
+
+                    foreach (InventorySlot btn in invbuttons)
+                    {
+                        //btn.Reset();
+                        LoadImages(btn, Utilities.imagePath + "empty.png", "Empty", "0");
+                    }
+
+                    Thread.Sleep(1000);
+                }
+                //offline
+                else
+                {
+                    foreach (InventorySlot btn in invbuttons)
+                    {
+                        //btn.Reset();
+                        LoadImages(btn, Utilities.imagePath + "empty.png", "Empty", "0");
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Utilities.LogEvent("MainWindow", ex.Message + " This is catastrophically bad, don't do this. Someone needs to fix this.");
+            }
+
+        }
 
         void LoadImages(Button slot, string imagePath, string text, string count) {
 

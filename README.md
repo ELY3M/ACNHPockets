@@ -1,12 +1,15 @@
 # ACNHPockets
 
-## This app is for Windows or Linux.    
+## This app is for Windows or Linux. 
+# the main reason I made this app because ACNHPokerCore only work on windows.    
+# It will take a lot of time and removals of windows-only dependencies to make ACNHPokerCore to work on Linux   
 
 ## Done:
 * Chat function is done.   
 * inventory freeze and unfreeze
 * read inventory (pockets)
 * load nhi's and update pockets 
+* ability to clear inventory (pockets)
 
 
 # TO DO:  
