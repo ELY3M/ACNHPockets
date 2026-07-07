@@ -96,10 +96,16 @@ jobs:
         tag_name: ${{ github.run_number }}
         body: ${{ github.event.head_commit.message }}
 
+    - name: Renaming the publish folders
+      run: | 
+        ren "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\" "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\ACNHPockets\"
+        ren "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish\" "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\ACNHPockets\"
+
+
     - name: Zipping up Release folder
       run: | 
-        7z a windows-release.zip "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\"
-        7z a linux-release.zip "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish\"
+        7z a windows-release.zip "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\ACNHPockets\"
+        7z a linux-release.zip "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\ACNHPockets\"
         
     - name: Upload Release
       uses: softprops/action-gh-release@v2
