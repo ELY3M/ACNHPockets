@@ -13,7 +13,7 @@ env:
   # Configuration type to build.
   # You can convert this to a build matrix if you need coverage of multiple configuration types.
   # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-  BUILD_CONFIGURATION: Release
+  #BUILD_CONFIGURATION: Release
 
 permissions: write-all
 
@@ -24,18 +24,23 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1
+    - name: Setup .NET 10
+      uses: actions/setup-dotnet@v4
+      with:
+       dotnet-version: '10.0.x'
 
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Build
+    - name: publish-windows
       working-directory: ${{env.GITHUB_WORKSPACE}}
-      # Add additional options to the MSBuild command line here (like platform or verbosity level).
-      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}} /t:Publish
+      ###run: dotnet publish -c Release -f ${{ env.NETVERSION }} -p:RuntimeIdentifierOverride=win10-x64 -p:SelfContained=true -p:PublishSingleFile=true -p:WindowsAppSDKSelfContained=true
+      run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+
+    - name: publish-linux
+      # working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true 
 
     - name: Get .NET Version 
       id: netversion
@@ -54,13 +59,13 @@ jobs:
       run: | 
         robocopy ${{ github.workspace }}\img ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\csv 
         robocopy ${{ github.workspace }}\csv ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\csv        
-
+        robocopy ${{ github.workspace }}\img ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish\csv 
+        robocopy ${{ github.workspace }}\csv ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish\csv 
 
     - name: Show Github infos
       run:  echo 'Workspace path ${{ github.workspace }} - runner.temp ${{ runner.temp }}'     
 
 
-     
       
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
@@ -92,8 +97,10 @@ jobs:
         body: ${{ github.event.head_commit.message }}
 
     - name: Zipping up Release folder
-      run: 7z a release.zip "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\"
-            
+      run: | 
+        7z a windows-release.zip "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\"
+        7z a linux-release.zip "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish\"
+        
     - name: Upload Release
       uses: softprops/action-gh-release@v2
       with:
@@ -101,7 +108,7 @@ jobs:
         prerelease: false    
         tag_name: ${{ github.run_number }}
         body: ${{ github.event.head_commit.message }}
-        files: ${{ github.workspace }}\release.zip
+        files: ${{ github.workspace }}\windows-release.zip
       env:
         GITHUB_TOKEN: ${{ github.token }} 
         
