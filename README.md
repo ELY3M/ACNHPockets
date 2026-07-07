@@ -1,8 +1,8 @@
 # ACNHPockets
 
 ## This app is for Windows or Linux. 
-# the main reason I made this app because ACNHPokerCore only work on windows.    
-# It will take a lot of time and removals of windows-only dependencies to make ACNHPokerCore to work on Linux   
+the main reason I made this app because ACNHPokerCore only work on windows.    
+It will take a lot of time and removals of windows-only dependencies to make ACNHPokerCore to work on Linux   
 
 ## Done:
 * Chat function is done.   
