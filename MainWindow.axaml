@@ -24,27 +24,8 @@
 
 
 
-<!--
-
-    <StackPanel Spacing="10" Margin="20" HorizontalAlignment="Right">
-        
-  <TextBlock Margin="0 5">Choose an item:</TextBlock>
-  <AutoCompleteBox x:Name="ACNHItems" 
-                 Width="200"
-                 SelectionChanged="SelectionChanged"
-                 IsTextCompletionEnabled="True"
-                 MinimumPrefixLength="0" 
-                 FilterMode="Contains" />
- </StackPanel>  
-
-<StackPanel Name="ItemImage" Spacing="10" Margin="20" HorizontalAlignment="Right">
-  <Button x:Name="Image" Content="Image" Height="150" Width="150" Click="SetSlot"/>
-</StackPanel>
-
--->
-
         <DockPanel>
-                <Button Margin="300 0 0 5" 
+                <Button Margin="200 0 0 5" 
                 Content="Select a NHI File" 
                 Click="OpenNHIFile_Click" 
                 HorizontalAlignment="Left"
@@ -63,14 +44,21 @@
                 Padding="10,5"/> 
 
                 <Button Margin="50 0 0 5" 
+                Content="Refresh Inventory" 
+                Click="RefreshInventory_Click" 
+                HorizontalAlignment="Left"
+                Padding="10,5"/> 
+
+                <Button Margin="50 0 0 5" 
                 Content="Clear Inventory" 
                 Click="ClearInventory_Click" 
                 HorizontalAlignment="Left"
                 Padding="10,5"/> 
 
-        <TextBlock Margin="200 0 0 5" HorizontalAlignment="Right">Choose an item:</TextBlock>
+    <StackPanel Margin="30 0 0 0" HorizontalAlignment="Center">
+        <TextBlock Margin="50 0 0 5" HorizontalAlignment="Right">Choose an item:</TextBlock>
         <AutoCompleteBox x:Name="ACNHItems" 
-                 Margin="30 0 0 5"
+                 Margin="30 0 0 0"
                  Width="200"
                  SelectionChanged="SelectionChanged"
                  IsTextCompletionEnabled="True"
@@ -78,9 +66,7 @@
                  HorizontalAlignment="Right"
                  FilterMode="Contains" />
         
-    <StackPanel HorizontalAlignment="Center">
-        <TextBlock Margin="30 0 0 5" HorizontalAlignment="Left" Text="Count:" />
-        <TextBox Margin="30 0 0 5" x:Name="count" Text="1" Width="100" Height="3" HorizontalAlignment="Right" />
+    <TextBlock Margin="30 0 0 5" HorizontalAlignment="Right" Text="Count:" /><TextBox Margin="30 0 0 0" x:Name="count" Text="1" Width="100" Height="3" HorizontalAlignment="Right" />
     </StackPanel>
 
 <StackPanel Name="ItemImage" HorizontalAlignment="Center">

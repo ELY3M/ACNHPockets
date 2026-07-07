@@ -1691,6 +1691,11 @@ string[] newArray = dynamicList.ToArray();
             //AllowInventoryUpdate = true;
         }
 
+        private async void RefreshInventory_Click(object sender, RoutedEventArgs args)
+        {
+            Utilities.LogEvent("MainWindow", "Refreshing Inventory...");
+            UpdateInventory();
+        }
         private async void ClearInventory_Click(object sender, RoutedEventArgs args)
         {
             Utilities.LogEvent("MainWindow", "Clearing Inventory...");
