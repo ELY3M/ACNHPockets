@@ -57,9 +57,9 @@ jobs:
     - name: copy csv and img files
       continue-on-error: true    
       run: | 
-        robocopy ${{ github.workspace }}\img ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\csv 
+        robocopy ${{ github.workspace }}\img ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\img
         robocopy ${{ github.workspace }}\csv ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\csv        
-        robocopy ${{ github.workspace }}\img ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish\csv 
+        robocopy ${{ github.workspace }}\img ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish\img
         robocopy ${{ github.workspace }}\csv ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish\csv 
 
     - name: Show Github infos
