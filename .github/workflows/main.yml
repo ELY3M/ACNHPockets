@@ -52,8 +52,8 @@ jobs:
     - name: copy csv and img files
       continue-on-error: true    
       run: | 
-        robocopy ${{ github.workspace }}\ACNHPockets\img ${{ github.workspace }}\ACNHPockets\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\csv 
-        robocopy ${{ github.workspace }}\ACNHPockets\csv ${{ github.workspace }}\ACNHPockets\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\csv        
+        robocopy ${{ github.workspace }}\img ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\csv 
+        robocopy ${{ github.workspace }}\csv ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\csv        
 
 
     - name: Show Github infos
@@ -67,7 +67,7 @@ jobs:
       id: upload
       with:
         name: Release
-        path: ${{ github.workspace }}\ACNHPockets\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\*
+        path: ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\*
         overwrite: true
         retention-days: 1
 
