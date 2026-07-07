@@ -41,7 +41,7 @@ jobs:
       id: netversion
       shell: cmd      
       run: | 
-        FOR /F "delims=" %%i IN ('dotnet msbuild ACNHPokerCore/ACNHPockets.csproj --getProperty:TargetFramework') DO (SET netversion=%%i)
+        FOR /F "delims=" %%i IN ('dotnet msbuild ACNHPockets/ACNHPockets.csproj --getProperty:TargetFramework') DO (SET netversion=%%i)
         echo %netversion%
         echo netversion=%netversion%>>%GITHUB_OUTPUT%
         
