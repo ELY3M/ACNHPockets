@@ -29,10 +29,9 @@
    
 ## Usage  
 	
-1. put in your switch ip address
-2. type in whatever you want.  
-3. click on Connect   
-4. The slots should update to whatever you have in your pockets.  
+1. put in your switch ip address 
+2. click on Connect   
+3. The slots should update to whatever you have in your pockets.  
 
 ## Credit 
 I used a lot of ACNHPokerCore codes for many things in this app. 
