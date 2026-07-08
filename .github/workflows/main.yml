@@ -98,8 +98,8 @@ jobs:
 
     - name: Renaming the publish folders
       run: | 
-        ren "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish" "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\ACNHPockets"
-        ren "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish" "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\ACNHPockets"
+        ren "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish" ACNHPockets
+        ren "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish" ACNHPockets
 
 
     - name: Zipping up Release folder
