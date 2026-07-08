@@ -98,14 +98,14 @@ jobs:
 
     - name: Renaming the publish folders
       run: | 
-        ren "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish" ACNHPockets
-        ren "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish" ACNHPockets
+        ren "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish" ACNHPockets-app
+        ren "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish" ACNHPockets-app
 
 
     - name: Zipping up Release folder
       run: | 
-        7z a windows-release.zip "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\ACNHPockets\"
-        7z a linux-release.zip "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\ACNHPockets\"
+        7z a windows-release.zip "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\ACNHPockets-app\"
+        7z a linux-release.zip "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\ACNHPockets-app\"
         
     - name: Upload Release
       uses: softprops/action-gh-release@v2
