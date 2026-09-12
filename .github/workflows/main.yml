@@ -28,11 +28,7 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
        dotnet-version: '10.0.x'
-
-    # - name: Restore NuGet packages
-      # working-directory: ${{env.GITHUB_WORKSPACE}}
-      # run: nuget restore ${{env.SOLUTION_FILE_PATH}}
-
+       
     - name: publish-windows
       working-directory: ${{env.GITHUB_WORKSPACE}}
       ###run: dotnet publish -c Release -f ${{ env.NETVERSION }} -p:RuntimeIdentifierOverride=win10-x64 -p:SelfContained=true -p:PublishSingleFile=true -p:WindowsAppSDKSelfContained=true
@@ -54,7 +50,9 @@ jobs:
       run:  echo 'Workspace path ${{ github.workspace }} - runner.temp ${{ runner.temp }}'     
          
     - name: list all dirs 
-      run: ls -R
+      run: | 
+        ls -la ${{ github.workspace }}/win-x64/ACNHPockets-app/
+        ls -la ${{ github.workspace }}/linux-x64/ACNHPockets-app/
       
     - name: Create Release
       uses: actions/create-release@latest
@@ -68,10 +66,13 @@ jobs:
         body: ${{ github.event.head_commit.message }}
 
 
-    - name: Zipping up Release folder
+    - name: Zipping up Release folders
       run: | 
-        zip a windows-release.zip "${{ github.workspace }}/win-x64/ACNHPockets-app/"
-        zip a linux-release.zip "${{ github.workspace }}/linux-x64/ACNHPockets-app/"
+        cd ./win-x64/ACNHPockets-app/
+        zip -r ../windows-release.zip .
+        cd ..
+        cd ./linux-x64/ACNHPockets-app/
+        zip -r ../linux-release.zip .
         
     - name: Upload Release
       uses: softprops/action-gh-release@v2
