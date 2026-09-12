@@ -68,11 +68,10 @@ jobs:
 
     - name: Zipping up Release folders
       run: | 
-        cd ./win-x64/ACNHPockets-app/
-        zip -r ../windows-release.zip .
-        cd ..
-        cd ./linux-x64/ACNHPockets-app/
-        zip -r ../linux-release.zip .
+        cd ${{ github.workspace }}/win-x64/ACNHPockets-app/
+        zip -r ${{ github.workspace }}/windows-release.zip .
+        cd ${{ github.workspace }}/linux-x64/ACNHPockets-app/
+        zip -r ${{ github.workspace }}/linux-release.zip .
         
     - name: Upload Release
       uses: softprops/action-gh-release@v2
