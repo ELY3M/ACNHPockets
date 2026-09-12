@@ -225,9 +225,10 @@ namespace ACNHPockets
 
 
                     string itemid = Utilities.GetIDFromName(selectedItem.ToString());
+                    string itemCount = count.Text;
                     if (!string.IsNullOrEmpty(itemid))
                     {
-                        LoadImages(Image, Utilities.GetImagePathFromID(itemid, itemSource), selectedItem.ToString(), "1");
+                        LoadImages(Image, Utilities.GetImagePathFromID(itemid, itemSource), selectedItem.ToString(), itemCount);
                     }
                 }
                 else
@@ -264,7 +265,148 @@ namespace ACNHPockets
         }
 
 
+        private void NormalItemSpawn(InventorySlot selectedSlot)
+        {
+            if (ACNHItems.Text == "")
+            {
+                //MessageBox.Show(@"Please enter an ID before sending item");
+                return;
+            }
 
+            if (count.Text == "")
+            {
+                //MessageBox.Show(@"Please enter an amount");
+                return;
+            }
+
+
+            string hexValue = "00000000";
+
+                int decValue = Convert.ToInt32(count.Text) - 1;
+                if (decValue >= 0)
+                    hexValue = Utilities.PrecedingZeros(decValue.ToString("X"), 8);
+
+            ///hexValue = Utilities.PrecedingZeros(count.Text, 8);
+
+            UInt16 intId = Convert.ToUInt16(Utilities.GetIDFromName(ACNHItems.Text), 16);
+
+            string front = Utilities.PrecedingZeros(hexValue, 8).Substring(0, 4);
+            //string back = Utilities.precedingZeros(hexValue, 8).Substring(4, 4);
+
+            try
+            {
+                if (online)
+                    //Utilities.SpawnItem(socket, selectedSlot, selectedItem.GetFlag0() + selectedItem.GetFlag1() + IDTextbox.Text, Utilities.PrecedingZeros(hexValue, 8));
+
+
+
+                if (ACNHItems.Text is "16A2") //recipe
+                {
+                    //selectedButton.Setup(GetNameFromID(hexValue, recipeSource), 0x16A2, Convert.ToUInt32("0x" + hexValue, 16), GetImagePathFromID(Utilities.Turn2bytes(hexValue), recipeSource));
+                }
+                else if (ACNHItems.Text is "114A") // Money Tree
+                {
+                    //selectedButton.Setup(GetNameFromID(ACNHItems.Text, itemSource), Convert.ToUInt16("0x" + ACNHItems.Text, 16), Convert.ToUInt32("0x" + hexValue, 16), GetImagePathFromID(Utilities.Turn2bytes(ACNHItems.Text), itemSource, Convert.ToUInt32("0x" + hexValue, 16)), GetImagePathFromID(Utilities.Turn2bytes(hexValue), itemSource), SelectedItem.GetFlag0(), SelectedItem.GetFlag1());
+                }
+                else if (ACNHItems.Text is "315A" or "1618" or "342F") // Wall-Mounted
+                {
+                    //selectedButton.Setup(GetNameFromID(ACNHItems.Text, itemSource), Convert.ToUInt16("0x" + ACNHItems.Text, 16), Convert.ToUInt32("0x" + hexValue, 16), GetImagePathFromID(ACNHItems  .Text, itemSource, Convert.ToUInt32("0x" + hexValue, 16)), GetImagePathFromID(Utilities.Turn2bytes(hexValue), itemSource, Convert.ToUInt32("0x" + Utilities.TranslateVariationValueBack(front), 16)), SelectedItem.GetFlag0(), SelectedItem.GetFlag1());
+                }
+                else if (ItemAttr.HasFenceWithVariation(intId))  // Fence Variation
+                {
+                    //selectedButton.Setup(GetNameFromID(Utilities.Turn2bytes(IDTextbox.Text), itemSource), Convert.ToUInt16("0x" + IDTextbox.Text, 16), Convert.ToUInt32("0x" + hexValue, 16), GetImagePathFromID(Utilities.Turn2bytes(IDTextbox.Text), itemSource, Convert.ToUInt32("0x" + front, 16)), "", SelectedItem.GetFlag0(), SelectedItem.GetFlag1());
+                }
+                else
+                {
+                    //selectedButton.Setup(GetNameFromID(Utilities.Turn2bytes(IDTextbox.Text), itemSource), Convert.ToUInt16("0x" + IDTextbox.Text, 16), Convert.ToUInt32("0x" + hexValue, 16), GetImagePathFromID(Utilities.Turn2bytes(IDTextbox.Text), itemSource, Convert.ToUInt32("0x" + hexValue, 16)), "", SelectedItem.GetFlag0(), SelectedItem.GetFlag1());
+                    LoadImages(selectedSlot, Utilities.GetImagePathFromID(Utilities.GetIDFromName(ACNHItems.Text), itemSource, Convert.ToUInt32("0x" + hexValue, 16)), ACNHItems.Text, count.Text);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Utilities.LogEvent("MainForm", "SpawnItem: " + ex.Message);
+            }
+
+            //this.ShowMessage(IDTextbox.Text);
+        }
+
+        /*
+        private void RecipeSpawn()
+        {
+            if (RecipeIDTextbox.Text == "")
+            {
+                MessageBox.Show(@"Please enter a recipe ID before sending item");
+                return;
+            }
+
+            if (selectedButton == null)
+            {
+                MessageBox.Show(@"Please select a slot");
+                return;
+            }
+
+            if (!offline)
+                Utilities.SpawnRecipe(socket, selectedSlot, "16A2", Utilities.Turn2bytes(RecipeIDTextbox.Text));
+
+            //this.ShowMessage(Utilities.turn2bytes(RecipeIDTextbox.Text));
+
+            selectedButton.Setup(GetNameFromID(Utilities.Turn2bytes(RecipeIDTextbox.Text), recipeSource), 0x16A2, Convert.ToUInt32("0x" + RecipeIDTextbox.Text, 16), GetImagePathFromID(Utilities.Turn2bytes(RecipeIDTextbox.Text), recipeSource));
+        }
+        */
+
+        /*
+        private void FlowerSpawn()
+        {
+            if (ACNHItems.Text == "")
+            {
+                //MessageBox.Show(@"Please select a flower");
+                return;
+            }
+
+            if (selectedButton == null)
+            {
+                //MessageBox.Show(@"Please select a slot");
+                return;
+            }
+
+            if (online)
+                Utilities.SpawnFlower(socket, selectedSlot, ACNHItems.Text, FlowerValueTextbox.Text);
+
+            //this.ShowMessage(FlowerIDTextbox.Text);
+
+            //selectedButton.Setup(GetNameFromID(ACNHItems.Text, itemSource), Convert.ToUInt16("0x" + ACNHItems.Text, 16), Convert.ToUInt32("0x" + FlowerValueTextbox.Text, 16), GetImagePathFromID(ACNHItems.Text, itemSource));
+
+
+        }
+        */
+
+        /*
+        private void DeleteItem()
+        {
+            if (selectedButton == null)
+            {
+                //MessageBox.Show(@"Please select a slot");
+                return;
+            }
+
+            if (online)
+            {
+                try
+                {
+                    //Utilities.DeleteSlot(socket, int.Parse(selectedButton.Tag.ToString()));
+                }
+                catch (Exception ex)
+                {
+                    Utilities.LogEvent("MainWindow", "Because nobody could *ever* possible attempt to parse bad data: "+ex.Message);
+                }
+            }
+            
+            //selectedButton.Reset();
+            //ButtonToolTip.RemoveAll();
+
+        }
+        */
 
 
         public List<string> SlotItem = new() { };

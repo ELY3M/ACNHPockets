@@ -2,9 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]
+  workflow_dispatch:
+  workflow_call:
 
 env:
   # Path to the solution file relative to the root of the project.
@@ -19,7 +19,7 @@ permissions: write-all
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -36,51 +36,22 @@ jobs:
     - name: publish-windows
       working-directory: ${{env.GITHUB_WORKSPACE}}
       ###run: dotnet publish -c Release -f ${{ env.NETVERSION }} -p:RuntimeIdentifierOverride=win10-x64 -p:SelfContained=true -p:PublishSingleFile=true -p:WindowsAppSDKSelfContained=true
-      run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+      run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./win-x64/ACNHPockets-app
 
     - name: publish-linux
       # working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true 
-
-    - name: Get .NET Version 
-      id: netversion
-      shell: cmd      
-      run: | 
-        FOR /F "delims=" %%i IN ('dotnet msbuild ${{ github.workspace }}/ACNHPockets.csproj --getProperty:TargetFramework') DO (SET netversion=%%i)
-        echo %netversion%
-        echo netversion=%netversion%>>%GITHUB_OUTPUT%
-        
-    - name: .NET Version test     
-      run: | 
-        echo ${{ steps.netversion.outputs.netversion }}
+      run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -o ./linux-x64/ACNHPockets-app 
 
     - name: copy csv and img files
       continue-on-error: true    
       run: | 
-        robocopy ${{ github.workspace }}\img ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\img
-        robocopy ${{ github.workspace }}\csv ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\csv        
-        robocopy ${{ github.workspace }}\img ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish\img
-        robocopy ${{ github.workspace }}\csv ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish\csv 
+        cp -r ${{ github.workspace }}/img ${{ github.workspace }}/win-x64/ACNHPockets-app/img
+        cp -r ${{ github.workspace }}/csv ${{ github.workspace }}/win-x64/ACNHPockets-app/csv        
+        cp -r ${{ github.workspace }}/img ${{ github.workspace }}/linux-x64/ACNHPockets-app/img
+        cp -r ${{ github.workspace }}/csv ${{ github.workspace }}/linux-x64/ACNHPockets-app/csv 
 
     - name: Show Github infos
       run:  echo 'Workspace path ${{ github.workspace }} - runner.temp ${{ runner.temp }}'     
-
-
-      
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      id: upload
-      with:
-        name: Release
-        path: ${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish\*
-        overwrite: true
-        retention-days: 1
-
-    - name: Output artifact ID
-      run:  echo 'Artifact ID is ${{ steps.upload.outputs.artifact-id }}'        
-        
-    - name: Output Artifact URL
-      run:  echo 'Artifact URL is ${{ steps.upload.outputs.artifact-url }}'
          
     - name: list all dirs 
       run: ls -R
@@ -96,16 +67,11 @@ jobs:
         tag_name: ${{ github.run_number }}
         body: ${{ github.event.head_commit.message }}
 
-    - name: Renaming the publish folders
-      run: | 
-        ren "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\publish" ACNHPockets-app
-        ren "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\publish" ACNHPockets-app
-
 
     - name: Zipping up Release folder
       run: | 
-        7z a windows-release.zip "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\win-x64\ACNHPockets-app\"
-        7z a linux-release.zip "${{ github.workspace }}\bin\Release\${{ steps.netversion.outputs.netversion }}\linux-x64\ACNHPockets-app\"
+        zip a windows-release.zip "${{ github.workspace }}/win-x64/ACNHPockets-app/"
+        zip a linux-release.zip "${{ github.workspace }}/linux-x64/ACNHPockets-app/"
         
     - name: Upload Release
       uses: softprops/action-gh-release@v2
@@ -114,7 +80,7 @@ jobs:
         prerelease: false    
         tag_name: ${{ github.run_number }}
         body: ${{ github.event.head_commit.message }}
-        files: ${{ github.workspace }}\windows-release.zip, ${{ github.workspace }}\linux-release.zip
+        files: ${{ github.workspace }}/windows-release.zip, ${{ github.workspace }}/linux-release.zip
       env:
         GITHUB_TOKEN: ${{ github.token }} 
         
