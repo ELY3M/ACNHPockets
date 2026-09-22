@@ -24,65 +24,61 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Setup .NET 10
-      uses: actions/setup-dotnet@v4
-      with:
-       dotnet-version: '10.0.x'
+      - uses: actions/checkout@v7
        
-    - name: publish-windows
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      ###run: dotnet publish -c Release -f ${{ env.NETVERSION }} -p:RuntimeIdentifierOverride=win10-x64 -p:SelfContained=true -p:PublishSingleFile=true -p:WindowsAppSDKSelfContained=true
-      run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./win-x64/ACNHPockets-app
-
-    - name: publish-linux
-      # working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -o ./linux-x64/ACNHPockets-app 
-
-    - name: copy csv and img files
-      continue-on-error: true    
-      run: | 
-        cp -r ${{ github.workspace }}/img ${{ github.workspace }}/win-x64/ACNHPockets-app/img
-        cp -r ${{ github.workspace }}/csv ${{ github.workspace }}/win-x64/ACNHPockets-app/csv        
-        cp -r ${{ github.workspace }}/img ${{ github.workspace }}/linux-x64/ACNHPockets-app/img
-        cp -r ${{ github.workspace }}/csv ${{ github.workspace }}/linux-x64/ACNHPockets-app/csv 
-
-    - name: Show Github infos
-      run:  echo 'Workspace path ${{ github.workspace }} - runner.temp ${{ runner.temp }}'     
-         
-    - name: list all dirs 
-      run: | 
-        ls -la ${{ github.workspace }}/win-x64/ACNHPockets-app/
-        ls -la ${{ github.workspace }}/linux-x64/ACNHPockets-app/
-      
-    - name: Create Release
-      uses: actions/create-release@latest
-      env:
-        GITHUB_TOKEN: ${{ github.token }} 
-      with:
-        draft: false
-        prerelease: false
-        release_name: ${{ steps.version.outputs.version }}
-        tag_name: ${{ github.run_number }}
-        body: ${{ github.event.head_commit.message }}
-
-
-    - name: Zipping up Release folders
-      run: | 
-        cd ${{ github.workspace }}/win-x64/ACNHPockets-app/
-        zip -r ${{ github.workspace }}/windows-release.zip .
-        cd ${{ github.workspace }}/linux-x64/ACNHPockets-app/
-        zip -r ${{ github.workspace }}/linux-release.zip .
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+       
+      - name: publish-windows
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        ###run: dotnet publish -c Release -f ${{ env.NETVERSION }} -p:RuntimeIdentifierOverride=win10-x64 -p:SelfContained=true -p:PublishSingleFile=true -p:WindowsAppSDKSelfContained=true
+        run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./win-x64/ACNHPockets-app
+    
+      - name: publish-linux
+        # working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -o ./linux-x64/ACNHPockets-app 
+    
+      - name: copy csv and img files
+        continue-on-error: true    
+        run: | 
+          cp -r ${{ github.workspace }}/img ${{ github.workspace }}/win-x64/ACNHPockets-app/img
+          cp -r ${{ github.workspace }}/csv ${{ github.workspace }}/win-x64/ACNHPockets-app/csv        
+          cp -r ${{ github.workspace }}/img ${{ github.workspace }}/linux-x64/ACNHPockets-app/img
+          cp -r ${{ github.workspace }}/csv ${{ github.workspace }}/linux-x64/ACNHPockets-app/csv 
+    
+      - name: Show Github infos
+        run:  echo 'Workspace path ${{ github.workspace }} - runner.temp ${{ runner.temp }}'     
+           
+      - name: list all dirs 
+        run: | 
+          ls -la ${{ github.workspace }}/win-x64/ACNHPockets-app/
+          ls -la ${{ github.workspace }}/linux-x64/ACNHPockets-app/
         
-    - name: Upload Release
-      uses: softprops/action-gh-release@v2
-      with:
-        draft: false
-        prerelease: false    
-        tag_name: ${{ github.run_number }}
-        body: ${{ github.event.head_commit.message }}
-        files: ${{ github.workspace }}/windows-release.zip, ${{ github.workspace }}/linux-release.zip
-      env:
-        GITHUB_TOKEN: ${{ github.token }} 
-        
+
+      - name: Zipping up Release folders
+        run: | 
+          cd ${{ github.workspace }}/win-x64/ACNHPockets-app/
+          zip -r ${{ github.workspace }}/windows-release.zip .
+          cd ${{ github.workspace }}/linux-x64/ACNHPockets-app/
+          zip -r ${{ github.workspace }}/linux-release.zip .
+
+      - name: get date/date 
+        env:
+          TZ: "America/Chicago"
+        run: | 
+          echo "NOW=$(date +'%m-%d-%Y-%I.%M.%S.%p')" >> $GITHUB_ENV
+          
+      - name: Upload Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: false
+          prerelease: false    
+          tag_name: ${{ env.NOW }}
+          body: ${{ github.event.head_commit.message }}
+          files: ${{ github.workspace }}/windows-release.zip, ${{ github.workspace }}/linux-release.zip
+          name: "Release ${{ env.NOW }}"
+        env:
+          GITHUB_TOKEN: ${{ github.token }} 
+          
